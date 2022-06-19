@@ -8,4 +8,4 @@ bot = telebot.TeleBot(TOKEN)
 if not TOKEN:
     exit("No token provided")
 
-BotDB = BotDB("authorization.db")
+db = BotDB("authorization.db")

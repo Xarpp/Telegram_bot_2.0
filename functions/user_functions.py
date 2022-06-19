@@ -87,4 +87,19 @@ def authorization(user_info):
     password = user_info['password']
     response = requests.get(f'{URL}/users/{username}/{password}/valid')
     response = response.json()['result']['result']
-    return response
+    # response return 0 if request successful
+    return not response
+
+
+def get_user_balance(login):
+    try:
+        response = requests.get(f'{URL}/users/{login}/userid')
+        user_api_id = str(response.json()['result'])
+        response = requests.get(f'{URL}/users/{user_api_id}/balance')
+        user_deposit = response.json()['result']['deposits']
+        user_point = response.json()['result']['points']
+        mess = str(f'У вас на аккаунте <b>{user_deposit}</b> рублей и <b>{user_point}</b> баллов')
+        return mess
+    except Exception:
+        mess = 'Ой! Кажется что-то сломалось, повторите попытку позже...'
+        return mess
