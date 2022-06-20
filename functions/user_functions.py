@@ -2,6 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 from config import URL, COUNT_HOST
 import time
+from logger_app import get_logger
+
+# Configure logging
+logger = get_logger(__name__)
 
 
 def stock_parser():
@@ -29,16 +33,16 @@ def stock_parser():
                 {
                     "Title": stock_heading[i].text.strip().replace('\xa0', ' ').replace('  ', ' '),
                     "Description": stock_description[i].text.strip().replace('\xa0', ' ').replace('  ', ' '),
-                    "Price": "₽" + stock_price[i].text.strip().replace('\xa0', ' ').replace('  ', ' ')
+                    "Price": stock_price[i].text.strip().replace('\xa0', ' ').replace('  ', ' ')
                 }
             )
 
-        mess = ""
+        mess = ''
         for txt in stock_info:
-            mess += txt['Title'] + '\n' + txt['Description'] + '\n' + txt['Price'] + '\n\n'
+            mess += f"<b>{txt['Title']}</b>\n{txt['Description']}\n₽<b>{txt['Price']}</b>\n\n"
         return mess
     except Exception as ex:
-        print(ex)
+        logger.error(ex)
         return -1
 
 
@@ -51,8 +55,9 @@ def get_hosts(host_sort):
             if host[i]['number'] < 100:
                 host_sort[(host[i]['number'])] = host[i]['id']
         return host_sort
-    except ConnectionError as err:
-        print(err)
+    except ConnectionError as ex:
+        logger.error(ex)
+        return 500
 
 
 def get_free_hosts():
@@ -61,6 +66,8 @@ def get_free_hosts():
         occupied_host = [None] * COUNT_HOST
         host_sort = [None] * COUNT_HOST
         host_sort = get_hosts(host_sort)
+        if host_sort == -1:
+            return -1
         response = requests.get(f'{URL}/usersessions/activeinfo')
         host = response.json()['result']
         av_time = [None]*len(host)
@@ -78,20 +85,26 @@ def get_free_hosts():
                 mess += f"{i} - Свободен\n\n"
         return mess
     except Exception as ex:
-        print(ex)
+        logger.error(ex)
         return -1
 
 
 def authorization(user_info):
-    username = user_info['login']
-    password = user_info['password']
-    response = requests.get(f'{URL}/users/{username}/{password}/valid')
-    response = response.json()['result']['result']
-    # response return 0 if request successful
-    return not response
+    """Returns 1 if user data is valid and 0 if is not"""
+    try:
+        username = user_info['login']
+        password = user_info['password']
+        response = requests.get(f'{URL}/users/{username}/{password}/valid')
+        response = response.json()['result']['result']
+        # Response by default returns 0 if user data is valid
+        return not response
+    except Exception as ex:
+        logger.error(ex)
+        return -1
 
 
 def get_user_balance(login):
+    """Returns user balance by login"""
     try:
         response = requests.get(f'{URL}/users/{login}/userid')
         user_api_id = str(response.json()['result'])
@@ -100,6 +113,6 @@ def get_user_balance(login):
         user_point = response.json()['result']['points']
         mess = str(f'У вас на аккаунте <b>{user_deposit}</b> рублей и <b>{user_point}</b> баллов')
         return mess
-    except Exception:
-        mess = 'Ой! Кажется что-то сломалось, повторите попытку позже...'
-        return mess
+    except Exception as ex:
+        logger.error(ex)
+        return -1

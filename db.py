@@ -8,9 +8,10 @@ class BotDB:
         self.conn = sqlite3.connect(db_file, check_same_thread=False)
         self.cursor = self.conn.cursor()
 
-    def post_add_user(self, user_id, login):
+    def post_add_user(self, user_id, login, logged=1):
         """Add new user to database"""
-        self.cursor.execute("INSERT INTO 'users' (user_id, login, logged) VALUES (?, ?, 1)", (user_id, login))
+        self.cursor.execute("INSERT INTO 'users' (user_id, login, chat_id, logged) "
+                            "VALUES (?, ?, ?)", (user_id, login, logged))
         return self.conn.commit()
 
     def post_change_login(self, user_id, login):
@@ -43,8 +44,10 @@ class BotDB:
         result = self.cursor.execute("SELECT last_login FROM users WHERE user_id = ?", (user_id,))
         return result.fetchone()[0]
 
-    def post_user_last_login(self, user_id):
-        pass
+    def post_user_last_login(self, last_login, user_id):
+        """Change user last login in database"""
+        self.cursor.execute("UPDATE 'users' SET last_login = ?, WHERE user_id = ?", (last_login, user_id))
+        return self.conn.commit()
 
     def post_close(self):
         """Closing connection to database"""
