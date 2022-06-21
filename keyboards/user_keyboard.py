@@ -2,7 +2,7 @@ from telebot import types
 
 
 def start_kb():
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
     free_host = types.KeyboardButton('Свободные ПК')
     stock = types.KeyboardButton('Акции')
     website = types.InlineKeyboardButton('Сайт клуба')
@@ -10,7 +10,8 @@ def start_kb():
     help_user = types.InlineKeyboardButton('Помощь')
     check_login = types.InlineKeyboardButton('Войти')
     support_button = types.InlineKeyboardButton('Поддержка')
-    markup.add(free_host, stock, website, group_vk, check_login, help_user, support_button)
+    games = types.InlineKeyboardButton('Игры')
+    markup.add(free_host, stock, website, group_vk, games, check_login, help_user, support_button)
     return markup
 
 

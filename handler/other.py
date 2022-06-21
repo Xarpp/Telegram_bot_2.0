@@ -2,7 +2,7 @@ from .client import start_authorization, logout_user, back_button, user_balance
 from controller import bot
 from telebot import types
 from keyboards import user_keyboard
-from functions import user_functions
+from functions import user_functions, admin_functions
 from logger_app import get_logger
 
 # Configure logging
@@ -60,6 +60,40 @@ def support_button(message):
     bot.send_message(message.chat.id, mess, parse_mode='html')
 
 
+# -------------@bot.message_handler(commands=['games'])------------- #
+def order_game(call, step):
+    if step == 1:
+        mess = bot.send_message(call.message.chat.id, 'Напиши название игры и мы установим ее в ближайшее время: ',
+                                parse_mode='html')
+        bot.register_next_step_handler(mess, order_game, 2)
+    elif step == 2:
+        send = admin_functions.send_message_to_admin(call, 1)
+        if send == 1:
+            mess = 'Заявка успешно отправлена'
+        else:
+            mess = 'Ой! Кажется что-то сломалось, повторите попытку позже...'
+        bot.send_message(call.chat.id, mess, parse_mode='html')
+
+
+def games(message):
+    mess = user_functions.get_games()
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton('Заказать игру', callback_data='order_game'))
+    if mess == -1:
+        mess = 'Ой! Кажется что-то сломалось, повторите попытку позже...'
+
+    bot.send_message(message.chat.id, mess, parse_mode='html', reply_markup=markup)
+# -------------@bot.message_handler(commands=['games'])------------- #
+
+
+# Inline keyboard
+@bot.callback_query_handler(func=lambda call: True)
+def callback_inline(call):
+    if call.data == 'order_game':
+        order_game(call, 1)
+
+
+# @bot.message_handler(commands=[''])
 def another_msg(message):
     mess = 'Я пока не понимаю, что ты пишешь, используй <b>/help</b>, чтобы узнать мои функции.'
     if message.text == 'Помощь':
@@ -82,6 +116,8 @@ def another_msg(message):
         user_balance(message)
     elif message.text == 'Поддержка':
         support_button(message)
+    elif message.text == 'Игры':
+        games(message)
     else:
         bot.send_message(message.chat.id, mess, parse_mode='html')
 
@@ -94,4 +130,5 @@ def register_handlers_other():
     bot.register_message_handler(stock, commands=['stock'])
     bot.register_message_handler(free_host, commands=['host'])
     bot.register_message_handler(support_button, commands=['support'])
+    bot.register_message_handler(games, commands=['games'])
     bot.register_message_handler(another_msg)

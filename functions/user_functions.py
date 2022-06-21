@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from config import URL, COUNT_HOST
 import time
 from logger_app import get_logger
+import json
 
 # Configure logging
 logger = get_logger(__name__)
@@ -57,7 +58,7 @@ def get_hosts(host_sort):
         return host_sort
     except ConnectionError as ex:
         logger.error(ex)
-        return 500
+        return -1
 
 
 def get_free_hosts():
@@ -116,3 +117,17 @@ def get_user_balance(login):
     except Exception as ex:
         logger.error(ex)
         return -1
+
+
+def get_games():
+    try:
+        with open("games_in_club.json", "r", encoding="utf-8") as file:
+            data = json.load(file)
+            mess = 'Список игр, установленных в клубе:\n'
+            for game in data['result']:
+                mess += f"<b>{game['title']}</b>\n"
+            return mess
+    except Exception as ex:
+        logger.error(ex)
+        return -1
+

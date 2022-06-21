@@ -1,0 +1,112 @@
+{
+  "version": null,
+  "result": [
+    {
+      "id": 2,
+      "title": "Apex"
+    },
+    {
+      "id": 139,
+      "title": "Call of Duty: Modern Warfare"
+    },
+    {
+      "id": 154,
+      "title": "Command & Conquer Generals Contra 009"
+    },
+    {
+      "id": 14,
+      "title": "Counter Strike: 1.6"
+    },
+    {
+      "id": 5,
+      "title": "Counter Strike: Global Offensive"
+    },
+    {
+      "id": 116,
+      "title": "CyberPunk 2077"
+    },
+    {
+      "id": 44,
+      "title": "Dead by Daylight"
+    },
+    {
+      "id": 135,
+      "title": "Death Stranding"
+    },
+    {
+      "id": 1,
+      "title": "Dota 2"
+    },
+    {
+      "id": 134,
+      "title": "Dying Light"
+    },
+    {
+      "id": 4,
+      "title": "Fortnite"
+    },
+    {
+      "id": 118,
+      "title": "Genshin Impact"
+    },
+    {
+      "id": 24,
+      "title": "Grand Theft Auto V"
+    },
+    {
+      "id": 19,
+      "title": "League of Legends"
+    },
+    {
+      "id": 41,
+      "title": "Left 4 Dead 2"
+    },
+    {
+      "id": 55,
+      "title": "Minecraft"
+    },
+    {
+      "id": 7,
+      "title": "Overwatch"
+    },
+    {
+      "id": 23,
+      "title": "PLAYERUNKNOWN'S BATTLEGROUNDS"
+    },
+    {
+      "id": 54,
+      "title": "Rust"
+    },
+    {
+      "id": 138,
+      "title": "Stronghold Crusader HD"
+    },
+    {
+      "id": 17,
+      "title": "Tom Clancy's Rainbow Six Siege"
+    },
+    {
+      "id": 18,
+      "title": "Valorant"
+    },
+    {
+      "id": 11,
+      "title": "War Thunder"
+    },
+    {
+      "id": 60,
+      "title": "Warcraft 3 Iccup"
+    },
+    {
+      "id": 9,
+      "title": "Warface"
+    },
+    {
+      "id": 63,
+      "title": "World of Tanks"
+    }
+  ],
+  "httpStatusCode": 200,
+  "message": null,
+  "isError": false
+}
